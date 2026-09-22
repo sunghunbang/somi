@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>면접플러스</title>
+<style>
+:root{
+  --bg:#f6f5f1;--card:#ffffff;--ink:#1d1d1f;--mut:#6b6b70;--line:#e4e2db;
+  --acc:#3b4cca;--acc-soft:#e8ebfb;--acc-ink:#2a37a0;
+  --ok:#1f7a4d;--ok-bg:#e3f4ea;--warn:#a05a00;--warn-bg:#fdf0d8;--bad:#b3261e;--bad-bg:#fbe5e3;
+  --new:#7a2fb0;--new-bg:#f1e6fa;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#16161a;--card:#202026;--ink:#ececf0;--mut:#9a9aa5;--line:#34343c;
+    --acc:#8b98ff;--acc-soft:#2a2d4d;--acc-ink:#b9c1ff;
+    --ok:#5fd39a;--ok-bg:#1c3328;--warn:#f0b35a;--warn-bg:#3a2d15;--bad:#ff8a80;--bad-bg:#3d2020;
+    --new:#d2a3ff;--new-bg:#33224a;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;font-size:15px;line-height:1.6}
+header.top{padding:20px 20px 8px;max-width:1180px;margin:0 auto}
+header.top h1{margin:0;font-size:22px;letter-spacing:-.02em}
+header.top p{margin:4px 0 0;color:var(--mut);font-size:13.5px}
+.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.credit{font-size:11.5px;color:var(--mut);text-align:right;line-height:1.6;white-space:nowrap;padding-top:2px}
+.credit .warn{color:var(--bad);font-weight:700}
+@media (max-width:560px){.credit{text-align:left;white-space:normal}}
+@media print{.credit{color:#000}.credit .warn{color:#000}}
+.wrap{max-width:1180px;margin:0 auto;padding:8px 20px 60px;display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+@media (max-width:820px){.wrap{grid-template-columns:1fr;padding:8px 16px 60px}header.top{padding:16px 16px 6px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+aside .card{padding:12px}
+aside h3{margin:0 0 8px;font-size:13px;color:var(--mut);font-weight:600}
+.act-item{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.act-item button.sel{flex:1;text-align:left;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:8px 10px;cursor:pointer;font:inherit;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.act-item button.sel.on{border-color:var(--acc);background:var(--acc-soft);color:var(--acc-ink);font-weight:600}
+.act-item button.x{border:none;background:transparent;color:var(--mut);cursor:pointer;font-size:16px;padding:4px 6px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit;font-size:13.5px}
+.btn:hover{border-color:var(--acc)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+@media (prefers-color-scheme:dark){.btn.primary{color:#111}}
+.btn.wide{width:100%;margin-top:4px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:999px;padding:7px 15px;cursor:pointer;font:inherit;font-size:13.5px}
+.tabs button.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){.tabs button.on{color:#111}}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:2px}
+.field .hint{font-size:12.5px;color:var(--mut);margin-bottom:5px}
+.field .flag{font-size:11px;font-weight:700;color:var(--new);background:var(--new-bg);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+textarea,input[type=text],select{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:9px 11px;font:inherit;font-size:14.5px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--acc);outline-offset:0;border-color:transparent}
+.cnt{font-size:12px;color:var(--mut);text-align:right}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:620px){.row2{grid-template-columns:1fr}}
+.notice{font-size:12.5px;color:var(--mut);background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:9px 12px;margin-bottom:14px}
+h2.sec{font-size:17px;margin:22px 0 10px;letter-spacing:-.01em}
+h2.sec:first-child{margin-top:0}
+.grid-diag{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.dg{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--card)}
+.dg .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.dg .h b{font-size:14px}
+.chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.weak{background:var(--warn-bg);color:var(--warn)}
+.chip.empty{background:var(--bad-bg);color:var(--bad)}
+.dg ul{margin:4px 0 0;padding-left:17px;font-size:13px;color:var(--mut)}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 4px}
+.meter i{display:block;height:100%;background:var(--acc);border-radius:99px;transition:width .25s}
+.grp{margin-bottom:22px}
+.grp .gh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.grp .gh h3{margin:0;font-size:16px}
+.badge{font-size:11px;font-weight:700;border-radius:4px;padding:1px 7px}
+.badge.new{background:var(--new-bg);color:var(--new)}
+.badge.base{background:var(--acc-soft);color:var(--acc-ink)}
+.grp .gd{font-size:13px;color:var(--mut);margin:0 0 8px}
+.q{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;background:var(--card)}
+.q.gap{border-left:4px solid var(--warn)}
+.q .qt{font-weight:600;font-size:14.5px}
+.q .why{font-size:12.5px;color:var(--mut);margin-top:3px}
+.q .why b{color:var(--acc-ink)}
+.gaptag{font-size:11px;color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:1px 6px;margin-left:6px;font-weight:700}
+details.ans{margin-top:8px}
+details.ans summary{cursor:pointer;font-size:13px;color:var(--acc-ink);font-weight:600;user-select:none}
+details.ans textarea{margin-top:6px;font-size:14px}
+.chks{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:12.5px}
+.chks label{display:flex;gap:5px;align-items:center;cursor:pointer}
+.chain{counter-reset:c;list-style:none;padding:0;margin:0}
+.chain li{counter-increment:c;position:relative;padding:9px 12px 9px 44px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--card);font-size:14px}
+.chain li::before{content:counter(c);position:absolute;left:12px;top:9px;width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+@media (prefers-color-scheme:dark){.chain li::before{color:#111}}
+.task{display:flex;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:7px;background:var(--card)}
+.task input{margin-top:5px;width:17px;height:17px;flex:none;accent-color:var(--acc)}
+.task.done{opacity:.55}
+.task.done .tt{text-decoration:line-through}
+.task .tt{font-weight:600;font-size:14.5px}
+.task .td{font-size:13px;color:var(--mut);margin-top:2px}
+.pri{font-size:11px;font-weight:700;border-radius:4px;padding:1px 7px;margin-right:6px}
+.pri.p1{background:var(--bad-bg);color:var(--bad)}
+.pri.p2{background:var(--warn-bg);color:var(--warn)}
+.pri.p3{background:var(--acc-soft);color:var(--acc-ink)}
+.frame{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.frame div{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--card);font-size:13px}
+.frame b{display:block;font-size:13.5px;color:var(--acc-ink);margin-bottom:2px}
+.frame span{color:var(--mut)}
+pre.pr{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px;max-height:320px;overflow:auto;font-family:inherit}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.pa{break-before:page}.pa:first-child{break-before:auto}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.show{opacity:1}
+.empty-state{text-align:center;color:var(--mut);padding:34px 10px}
+@media print{
+  pre.pr{display:none}
+
+  body{background:#fff;color:#000;font-size:12px}
+  aside,.tabs,.actions,.btn,details.ans summary .cnt,header.top p,.notice,.no-print{display:none!important}
+  .wrap{display:block;padding:0}
+  .card{border:none;padding:0}
+  details.ans{display:block}
+  details.ans[open]>summary{display:none}
+  .q,.task,.dg{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="head-row">
+    <div>
+      <h1>면접플러스 <small style="font-weight:500;color:var(--mut);font-size:14px">시행착오 · 성찰 심화판</small></h1>
+      <p>활동(미활보·세특·작업) 한 건씩 입력하면 빈칸과 약한 문장을 진단하고, 면접관이 파고들 핵심 질문과 “스스로 공부할 것”을 정리해 줍니다.</p>
+    </div>
+    <div class="credit">제작 · 충남예술고 교사 방성훈<br><span class="warn">⚠ 무단 복제·배포 금지</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside>
+    <div class="card">
+      <h3>내 활동 목록</h3>
+      <div id="actList"></div>
+      <button class="btn wide" id="btnAdd">+ 활동 추가</button>
+      <button class="btn wide" id="btnSample">예시 불러오기</button>
+      <hr style="border:none;border-top:1px solid var(--line);margin:10px 0">
+      <h3>일괄 저장 (전체 활동)</h3>
+      <button class="btn wide" id="btnZip">개별 파일로 저장 (ZIP)</button>
+      <button class="btn wide" id="btnPrintAll">전체 인쇄 · PDF 저장</button>
+      <button class="btn wide" id="btnSave">전체 JSON 저장</button>
+      <button class="btn wide" id="btnLoad">JSON 불러오기</button>
+      <input type="file" id="fileLoad" accept=".json,application/json" hidden>
+    </div>
+  </aside>
+
+  <main>
+    <div class="tabs" id="tabs"></div>
+    <div class="card" id="main"></div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============ 설정 ============ */
+const FIELDS=[
+  {id:'motive', n:'① 동기', hint:'왜 이 활동·주제를 골랐나요? 무엇이 궁금했나요?', ph:'예) 복도 끝 자투리 공간이 항상 비어 있는 것이 이상해서, 왜 사람들이 그곳에 머물지 않는지 알고 싶었다.', min:40},
+  {id:'process', n:'② 과정', hint:'무엇을, 어떤 순서·도구·기간으로 했나요? (숫자·재료·횟수가 들어가면 좋아요)', ph:'예) 3일간 하교 시간대 동선을 관찰하고, 스케치 6장으로 배치안을 만든 뒤 …', min:50},
+  {id:'trial', n:'③ 시행착오', hint:'막혔던 순간, 실패한 시도, 버린 안. 실제 있었던 것만 적으세요. (스케치북·수정본을 떠올려 보세요)', ph:'예) 처음엔 벽면을 밝은 노란색으로 바꾸려 했지만, 시뮬레이션해 보니 복도 전체가 산만해 보였다.', min:60, flag:true},
+  {id:'fix', n:'④ 해결·전환', hint:'그래서 무엇을 어떻게 바꿨나요? 바꾼 근거는 무엇이었나요?', ph:'예) 색 대신 조명 높이를 낮춰 머무는 지점을 만들었고, 친구 5명에게 비교 사진을 보여 …', min:50, flag:true},
+  {id:'result', n:'⑤ 결과', hint:'산출물과 달라진 점. 전·후 비교가 가능하면 적어 보세요.', ph:'예) 최종 시안 1점 + 전/후 비교 패널 2장. 체류 예상 지점이 2곳에서 4곳으로 늘었다.', min:40},
+  {id:'reflect', n:'⑥ 성찰·발견', hint:'스스로 알게 된 것. 활동 전과 후에 생각이 무엇이 달라졌나요?', ph:'예) 처음엔 “예쁘게 꾸미면 된다”고 생각했는데, 사람의 동선과 시선이 먼저라는 것을 알게 되었다.', min:60, flag:true},
+  {id:'link', n:'⑦ 확장·전공 연결', hint:'이 경험이 이후 작업이나 지원 전공에서 어떻게 이어지나요?', ph:'예) 이후 포스터 작업에서도 시선 흐름을 먼저 그려 본 뒤 요소를 배치하는 습관이 생겼다.', min:40}
+];
+const VAGUE=['열심히','다양한','다양하게','많은','느꼈','성장','배웠','의미 있','의미있','도움이 되','노력','최선','흥미','관심을 가지','발전','좋은 경험','새로운 시각','깊이 있','깊게','잘 표현','다채로','풍부'];
+const CAUSAL=['때문','그래서','그 결과','따라서','하지만','그러나','대신','반면','덕분','이유','왜냐하면','결과적으로','그러자','위해','고자','착안','바탕으로','의도'];
+const TRIAL_W=['실패','막혔','막힌','안 됐','안됐','잘 안','다시','수정','바꿨','바꾸','버렸','버리','문제','어긋','부족','한계','오류','엉망','뒤집','포기','번복','재작업','재시도','산만','어색','맞지 않','어려움','겪','갈라','찌그러','왜곡','틀어','지저분','처지','한정','깨달'];
+const CONTRAST=['처음엔','처음에는','이전','달라','달랐','깨달','알게','오히려','반대로','예상과','생각과','바뀌','바뀐','전에는','이후','그전'];
+const CHECKS=['구체적 장면·수치 1개','이유(왜)가 들어감','바꾼 것·결과가 들어감','전공과 연결됨'];
+const TYPES=['교과 세특','창의적체험활동(비교과)','개인·대회 작업','기타'];
+
+/* ============ 상태 ============ */
+let S={acts:[],cur:0,tab:'input'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+function newAct(){return {id:uid(),title:'',type:TYPES[0],keywords:'',motive:'',process:'',trial:'',fix:'',result:'',reflect:'',link:'',answers:{},done:{}}}
+const cur=()=>S.acts[S.cur];
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),1800)}
+
+/* ============ 진단 ============ */
+const has=(v,list)=>list.some(w=>v.includes(w));
+const vagueHits=v=>VAGUE.filter(w=>v.includes(w));
+function diagField(f,val){
+  const v=(val||'').trim(),notes=[];let st='ok';
+  if(!v)return {st:'empty',notes:['아직 비어 있어요. 면접관이 가장 먼저 파고드는 빈칸입니다.']};
+  const weak=m=>{if(st==='ok')st='weak';notes.push(m)};
+  if(v.length<f.min)weak(`분량이 짧아요 (${v.length}자 / 권장 ${f.min}자 이상).`);
+  const vg=vagueHits(v);
+  if(vg.length>=2)weak(`모호한 표현: ${vg.map(x=>'‘'+x+'’').join(', ')} → 장면·수치·행동으로 바꿔 보세요.`);
+  else if(vg.length===1)notes.push(`‘${vg[0]}’은(는) 면접관이 “구체적으로?”라고 되묻는 단어예요.`);
+  if(f.id==='trial'&&!has(v,TRIAL_W))weak('막힘·실패·수정을 나타내는 표현이 보이지 않아요. “처음엔 ~했지만 ~해서 ~로 바꿨다”처럼 장면으로 적어 보세요.');
+  if((f.id==='fix'||f.id==='motive')&&!has(v,CAUSAL))weak('이유를 잇는 표현(때문에·그래서·대신 등)이 없어요. 판단의 근거가 드러나야 합니다.');
+  if(f.id==='reflect'&&!has(v,CONTRAST))weak('전·후 비교(처음엔~/알게 된 것)가 보이지 않아요. “달라진 점”이 핵심입니다.');
+  if((f.id==='process'||f.id==='result')&&!/\d/.test(v))notes.push('숫자(횟수·기간·개수)가 없어요. 하나만 넣어도 신뢰도가 올라갑니다.');
+  if(st==='ok'&&!notes.length)notes.push('구조가 좋아요. 이제 소리 내어 답해 보세요.');
+  return {st,notes};
+}
+function diagAll(a){return FIELDS.map(f=>({f,...diagField(f,a[f.id])}))}
+const kws=a=>(a.keywords||'').split(/[,，、\n]/).map(s=>s.trim()).filter(Boolean);
+const snip=(s,n)=>{s=(s||'').replace(/\s+/g,' ').trim();return s.length>n?s.slice(0,n)+'…':s};
+const firstSent=s=>((s||'').trim().split(/(?<=[.!?。다요])\s+/)[0]||'');
+function allVague(a){const set=[];['motive','process','trial','fix','result','reflect','link'].forEach(k=>vagueHits(a[k]||'').forEach(w=>{if(!set.includes(w))set.push(w)}));return set}
+
+/* ============ 질문 은행 ============ */
+function buildQuestions(a){
+  const A=a.title.trim()||'이 활동',K=kws(a)[0]||'핵심 개념';
+  const t=(a.trial||'').trim(),fx=(a.fix||'').trim(),rf=(a.reflect||'').trim(),vg=allVague(a);
+  const G=[];
+  // 기본
+  const base=[
+    {k:'b1',q:`「${A}」을(를) 한 문장으로 소개하고, 이 활동에서 가장 중요한 질문이 무엇이었는지 말해 보세요.`,why:'활동의 핵심을 스스로 압축할 수 있는지'},
+    {k:'b2',q:`왜 하필 ${A}이었나요? 다른 주제도 있었을 텐데 이것을 고른 결정적 이유는요?`,why:'선택의 근거와 자기 주도성'},
+    {k:'b3',q:`이 활동에서 본인이 직접 결정한 것과, 주어진 조건은 각각 무엇이었나요?`,why:'참여 정도와 본인 기여의 구분'},
+    {k:'b4',q:`결과물에서 가장 마음에 드는 부분과 가장 아쉬운 부분을 하나씩 말해 보세요.`,why:'자기 평가의 균형'}
+  ];
+  vg.slice(0,2).forEach((w,i)=>base.push({k:'bv'+i,gap:true,q:`서류에 ‘${w}’이라고 표현했는데, 구체적으로 어떤 장면·수치·변화를 말하는 건가요?`,why:'모호한 표현을 구체 사례로 뒷받침하는지'}));
+  G.push({key:'base',title:'기본 핵심 질문',badge:'base',desc:'서류를 처음 읽고 나오는 확인·동기 질문',items:base});
+  // 시행착오
+  const tr=[];
+  if(!t)tr.push({k:'t0',gap:true,q:`시행착오가 없었다고 봐도 되나요? 그렇다면 처음부터 정답을 알고 있었다는 뜻인데, 그 확신은 어디서 왔나요?`,why:'시행착오가 없는 서술은 “깊이 없음”으로 읽힙니다'});
+  else tr.push({k:'t2',q:`“${snip(t,36)}” 부분이 가장 힘들었다고 했는데, 그 순간 원인이 무엇이라고 진단했나요? 진단이 틀렸던 적은 없나요?`,why:'문제 진단 능력과 자기 판단의 점검'});
+  tr.push({k:'t1',q:`${A} 과정에서 가장 크게 막혔던 순간은 언제였고, 그때 무엇이 문제라고 판단했나요?`,why:'막힘을 인식하는 시점과 판단'});
+  tr.push({k:'t3',q:`처음 세운 계획(가설)과 최종 결과물은 어디가 달라졌나요? 무엇을 보고 방향을 바꿨나요?`,why:'계획-결과의 차이를 설명할 수 있는지'});
+  tr.push({k:'t4',q:`버린 시안·시도 중 하나를 골라, 왜 버렸는지 설명해 보세요. 그 시도에서 남긴 것은 있나요?`,why:'실패에서 건진 것이 있는지'});
+  if(fx)tr.push({k:'t5',q:`수정 방법으로 “${snip(fx,30)}”을(를) 택했습니다. 다른 대안 두 가지와 비교했을 때 이것이 나은 이유는요?`,why:'해결책 선택의 근거'});
+  else tr.push({k:'t5',gap:true,q:`막힌 부분을 어떻게 해결했나요? 해결 방법을 정한 기준은 무엇이었나요?`,why:'해결·전환 서술이 비어 있음'});
+  tr.push({k:'t6',q:`수정한 결정이 옳았다는 것을 어떤 근거로 확인했나요? (눈으로 보기에? 타인의 피드백? 비교 실험?)`,why:'“느낌”이 아닌 검증 방식'});
+  tr.push({k:'t7',q:`같은 문제를 완전히 다른 방법으로 풀 수 있었다면 어떤 방법이 있었을까요? 왜 그 방법은 택하지 않았나요?`,why:'사고의 폭'});
+  G.push({key:'trial',title:'시행착오 심화 질문',badge:'new',desc:'실패·수정의 과정과 판단 근거를 파고드는 질문 — 홍대 “사고과정 메모” 경향과 맞닿아 있음',items:tr});
+  // 성찰
+  const rr=[];
+  if(rf)rr.push({k:'r3',q:`“${snip(firstSent(rf)||rf,40)}”라고 정리했는데, 그것을 알게 된 결정적 장면은 무엇이었나요? 증거가 될 스케치·수정본이 있나요?`,why:'성찰 문장의 진짜 경험 여부 확인'});
+  else rr.push({k:'r3',gap:true,q:`이 활동에서 ‘발견’이라고 부를 만한 것은 무엇인가요? 한 문장으로 말해 보세요.`,why:'성찰·발견 서술이 비어 있음'});
+  rr.push({k:'r1',q:`이 활동을 하기 전과 후에 ${K}에 대한 생각이 어떻게 달라졌나요? 구체적인 장면 하나로 말해 보세요.`,why:'변화의 구체성'});
+  rr.push({k:'r2',q:`활동 중 스스로 발견한 것 가운데, 교사나 책이 알려주지 않았는데 본인이 알아낸 것은 무엇인가요?`,why:'자기 주도적 발견'});
+  rr.push({k:'r4',q:`다시 처음부터 한다면 무엇을 가장 먼저 바꾸겠습니까? 그 이유는요?`,why:'회고의 깊이'});
+  rr.push({k:'r5',q:`이 발견을 ${A} 밖의 다른 작업에도 적용해 본 적이 있나요? 있다면 사례를, 없다면 어떻게 적용할지 말해 보세요.`,why:'전이(일반화) 능력'});
+  rr.push({k:'r6',q:`본인의 습관이나 약점 중 이 활동에서 드러난 것은 무엇이며, 어떻게 보완했나요?`,why:'자기 인식'});
+  rr.push({k:'r7',q:`이 활동을 하고 나서 새로 생긴 질문은 무엇인가요?`,why:'탐구의 지속성'});
+  G.push({key:'reflect',title:'성찰·발견 심화 질문',badge:'new',desc:'스스로 깨달은 것이 “실제 경험”에서 나왔는지, 다른 곳에 쓰일 수 있는지 확인',items:rr});
+  // 전공
+  const mj=[
+    {k:'m1',q:`이 경험이 지원 전공에서 어떤 문제를 푸는 데 쓰일 수 있나요?`,why:'전공 적합성'},
+    {k:'m2',q:`비슷한 주제로 작업한 작가·디자이너와 비교하면 본인의 접근은 어디가 다른가요?`,why:'참고 사례 이해와 차별점'},
+    {k:'m3',q:`${K}을(를) 이 분야를 모르는 사람에게 1분 안에 설명해 보세요.`,why:'개념 이해도'},
+    {k:'m4',q:`이 활동의 한계는 무엇인가요? 비판을 받는다면 어떤 지적이 가장 아프겠습니까?`,why:'비판적 사고와 태도'}
+  ];
+  G.push({key:'major',title:'전공 확장·압박 질문',badge:'base',desc:'마지막에 던지는 확장·압박형',items:mj});
+  return G;
+}
+function buildChain(a){
+  const A=a.title.trim()||'이 활동',t=snip(a.trial,30),fx=snip(a.fix,30),rf=snip(firstSent(a.reflect)||a.reflect,30);
+  return [
+    `Q1. ${A}에서 무엇이 가장 큰 문제였나요?${t?` (서류: “${t}”)`:''}`,
+    `Q2. 왜 그것이 문제라고 판단했나요? 근거는요?`,
+    `Q3. 그래서 무엇을 어떻게 바꿨나요?${fx?` (서류: “${fx}”)`:''}`,
+    `Q4. 바꾼 뒤 나아졌다는 것을 어떻게 알았나요?`,
+    `Q5. 그 과정에서 알게 된 것은? 다시 한다면?${rf?` (서류: “${rf}”)`:''}`
+  ];
+}
+
+/* ============ 스스로 공부 ============ */
+function buildTasks(a){
+  const T=[],d=diagAll(a),by=Object.fromEntries(d.map(x=>[x.f.id,x]));
+  const add=(id,pri,title,detail)=>T.push({id,pri,title,detail});
+  const bad=id=>by[id].st!=='ok';
+  if(by.trial.st==='empty')add('gap-trial',1,'시행착오 3개를 “시도→문제→수정→결과”로 적기','없었다고 느껴져도 스케치 초안·버린 시안·바꾼 재료·주변 피드백을 되짚어 보세요. 꾸며내지 말고 실제 기록(스케치북·사진·메모)을 근거로 하세요. 꼬리질문에서 바로 드러납니다.');
+  else if(by.trial.st==='weak')add('gap-trial',1,'시행착오 서술을 “장면”으로 다시 쓰기','“처음엔 ~했지만 ~ 때문에 ~로 바꿨다” 형태로, 막힌 지점·원인 진단·수정을 각각 한 문장씩.');
+  if(bad('fix'))add('gap-fix',1,'바꾼 이유(근거) 한 문장 만들기','“~ 때문에 ~를 택했다. 대안 ~는 ~해서 제외했다.” 대안과 비교한 문장이 있어야 방어됩니다.');
+  if(by.reflect.st==='empty'||by.reflect.st==='weak')add('gap-reflect',1,'“전 → 후” 문장 만들기','“처음엔 __라고 생각했는데, __ 장면에서 __를 알게 되어, 지금은 __라고 생각한다.” 빈칸에 실제 장면을 채우세요.');
+  ['motive','process','result','link'].forEach(id=>{if(bad(id)){const f=by[id].f;add('gap-'+id,2,`${f.n} 보강하기`,by[id].notes.join(' '))}});
+  allVague(a).slice(0,4).forEach(w=>add('vg-'+w,2,`‘${w}’을(를) 구체적 장면·수치로 바꾸기`,`서류의 ‘${w}’ 표현을 “언제·무엇을·얼마나”가 보이는 문장으로 교체하고, 그 근거가 되는 활동 기록을 하나 준비하세요.`));
+  kws(a).slice(0,5).forEach(k=>add('kw-'+k,2,`‘${k}’ 개념 정리 (정의 30초 + 작가·작품 2 + 내 활동 근거)`,`① 30초 정의 ② 대표 작가·작품 2개 ③ 내 활동의 어느 장면에서 쓰였는지 ④ 오해하기 쉬운 점 1개.`));
+  if(!kws(a).length)add('gap-kw',2,'핵심 개념·조형요소·작가 키워드 입력하기','입력 탭의 “키워드”에 3~5개를 적으면, 개념 정리 과제가 자동으로 생성됩니다.');
+  if(by.trial.st!=='empty'&&by.fix.st!=='empty')add('evid',2,'전/후 증거 2장 준비해 비교 설명 연습','시안 A(수정 전)와 B(수정 후)를 나란히 놓고 “무엇이 왜 달라졌는지” 60초 안에 말하기.');
+  // 답변 작성 진행
+  const G=buildQuestions(a),ids=G.filter(g=>g.key==='trial'||g.key==='reflect').flatMap(g=>g.items.map(i=>i.k));
+  const n=ids.filter(id=>((a.answers[id]||{}).t||'').trim().length>=80).length;
+  if(n<Math.ceil(ids.length/2))add('ans-tr',1,`시행착오·성찰 질문 답변 작성하기 (${n}/${ids.length})`,'②탭의 질문마다 “내 답변”에 250~350자로 적어 보세요. 절반 이상 채우면 이 과제가 완료 처리됩니다.');
+  add('rec',2,'60초 답변을 소리 내어 녹음해 듣기','글로 잘 쓴 답도 말하면 길어집니다. 휴대폰 녹음 후 군더더기·머뭇거림 표시.');
+  add('chain',2,'꼬리질문 5단계 사슬에 끝까지 답해 보기','②탭 하단의 사슬 5문항에 순서대로 답하며 어디서 막히는지 확인.');
+  add('crit',3,'한계·비판 질문에 대한 답 준비','“가장 아픈 지적”을 스스로 하나 정하고 인정 + 개선 방향 한 문장으로 답하기.');
+  add('mock',3,'친구·교사와 모의 면접(끊어 묻기)','답이 끝나기 전에 “왜요?”로 끼어들게 하고 흔들리지 않는지 확인.');
+  if(a.link&&by.link.st!=='ok')add('cmp',2,'같은 주제의 작가·디자이너 사례 1개 조사·비교','내 접근과 어디가 같고 다른지 두 문장으로.');
+  const seen=new Set();
+  return T.filter(t=>!seen.has(t.id)&&seen.add(t.id)).sort((x,y)=>x.pri-y.pri);
+}
+const isDone=(a,t)=>t.id==='ans-tr'?false:!!a.done[t.id];
+
+/* ============ 렌더링 ============ */
+function renderSide(){
+  $('#actList').innerHTML=S.acts.map((a,i)=>`<div class="act-item"><button class="sel ${i===S.cur?'on':''}" data-sel="${i}" title="${esc(a.title)}">${esc(a.title||'(제목 없음)')}</button><button class="x" data-del="${i}" aria-label="삭제">×</button></div>`).join('');
+}
+function renderTabs(){
+  const t=[['input','① 입력'],['diag','② 진단 · 핵심질문'],['study','③ 스스로 공부']];
+  $('#tabs').innerHTML=t.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?'on':''}">${l}</button>`).join('')+`<button data-tab="print" style="margin-left:auto">전체 인쇄</button>`;
+}
+function renderInput(a){
+  const f=FIELDS.map(x=>`<div class="field"><label for="f_${x.id}">${x.n}${x.flag?'<span class="flag">업그레이드</span>':''}</label><div class="hint">${esc(x.hint)}</div><textarea id="f_${x.id}" data-f="${x.id}" rows="3" placeholder="${esc(x.ph)}">${esc(a[x.id])}</textarea><div class="cnt" data-c="${x.id}">${(a[x.id]||'').length}자</div></div>`).join('');
+  return `<div class="notice">입력한 내용은 이 브라우저 안에서만 처리되고 어디로도 전송되지 않습니다. 저장하려면 왼쪽의 “JSON 저장”을 사용하세요.</div>
+  <div class="row2"><div class="field"><label for="f_title">활동명</label><input type="text" id="f_title" data-f="title" value="${esc(a.title)}" placeholder="예) 학교공간 리디자인 — 노후 복도 코너"></div>
+  <div class="field"><label for="f_type">유형</label><select id="f_type" data-f="type">${TYPES.map(t=>`<option ${a.type===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
+  <div class="field"><label for="f_keywords">핵심 키워드 (조형요소·개념·작가, 쉼표로 구분)</label><input type="text" id="f_keywords" data-f="keywords" value="${esc(a.keywords)}" placeholder="예) 동선, 여백, 색채 대비"></div>${f}
+  <div class="actions"><button class="btn primary" data-go="diag">분석하기 →</button></div>`;
+}
+function renderDiag(a){
+  const d=diagAll(a),ok=d.filter(x=>x.st==='ok').length,pct=Math.round(ok/d.length*100);
+  const cards=d.map(x=>`<div class="dg"><div class="h"><b>${x.f.n}</b><span class="chip ${x.st}">${{ok:'양호',weak:'보강 필요',empty:'빈칸'}[x.st]}</span></div><ul>${x.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`).join('');
+  const G=buildQuestions(a);
+  const groups=G.map(g=>`<div class="grp"><div class="gh"><h3>${g.title}</h3><span class="badge ${g.badge}">${g.badge==='new'?'업그레이드':'기본'}</span></div><p class="gd">${g.desc}</p>${g.items.map(q=>qCard(a,q)).join('')}</div>`).join('');
+  const chain=`<div class="grp"><div class="gh"><h3>꼬리질문 사슬</h3><span class="badge new">업그레이드</span></div><p class="gd">한 답변에서 끝나지 않고 이어지는 5단계. 마지막 단계까지 흔들리지 않는지 연습하세요.</p><ol class="chain">${buildChain(a).map(x=>`<li>${esc(x.replace(/^Q\d\.\s*/,''))}</li>`).join('')}</ol></div>`;
+  return `<h2 class="sec">서류 준비도 진단</h2><div class="meter"><i style="width:${pct}%"></i></div><div style="font-size:13px;color:var(--mut);margin-bottom:10px">7개 항목 중 ${ok}개 양호 (${pct}%) · 규칙 기반 점검이므로 내용의 수준은 교사·Claude와 함께 검토하세요.</div><div class="grid-diag">${cards}</div>
+  <h2 class="sec">예상 핵심 질문</h2>${groups}${chain}`;
+}
+function qCard(a,q){
+  const ans=a.answers[q.k]||{t:'',c:[false,false,false,false]};
+  return `<div class="q ${q.gap?'gap':''}"><div class="qt">${esc(q.q)}${q.gap?'<span class="gaptag">서류 빈칸/약점</span>':''}</div><div class="why"><b>면접관 의도</b> · ${esc(q.why)}</div>
+  <details class="ans" ${ans.t?'open':''}><summary>내 답변 쓰기 <span class="cnt" data-ac="${q.k}">${ans.t.length}자</span></summary><textarea rows="4" data-ans="${q.k}" placeholder="60~90초 분량(약 250~350자)으로 적어 보세요.">${esc(ans.t)}</textarea>
+  <div class="chks">${CHECKS.map((c,i)=>`<label><input type="checkbox" data-achk="${q.k}:${i}" ${ans.c[i]?'checked':''}>${c}</label>`).join('')}</div></details></div>`;
+}
+function renderStudy(a,noPrompt){
+  const T=buildTasks(a),done=T.filter(t=>isDone(a,t)||(t.id==='ans-tr'&&false)).length;
+  const frame=[['목표','무엇을 하려 했나'],['첫 시도','처음 방법과 예상'],['막힘','어느 장면에서 안 됐나'],['원인 진단','왜 안 된다고 봤나'],['수정','무엇을 바꿨나'],['근거 확인','나아졌다는 증거'],['발견','전 → 후 달라진 생각'],['다음 적용','다른 작업에 쓴 곳']];
+  const list=T.map(t=>{const dn=isDone(a,t);return `<label class="task ${dn?'done':''}"><input type="checkbox" data-task="${esc(t.id)}" ${dn?'checked':''} ${t.id==='ans-tr'?'disabled':''}><div><div class="tt"><span class="pri p${t.pri}">${['','우선','중요','보완'][t.pri]}</span>${esc(t.title)}</div><div class="td">${esc(t.detail)}</div></div></label>`}).join('');
+  return `<h2 class="sec">스스로 공부할 부분</h2><div class="meter"><i style="width:${T.length?Math.round(done/T.length*100):0}%"></i></div><div style="font-size:13px;color:var(--mut);margin-bottom:10px" id="taskProg">${done} / ${T.length} 완료</div>${list}
+  <h2 class="sec">시행착오형 답변 프레임 (60~90초)</h2><div class="frame">${frame.map((f,i)=>`<div><b>${i+1}. ${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div>
+  ${noPrompt?'':`<h2 class="sec">Claude로 더 깊이 검토받기</h2><p style="font-size:13px;color:var(--mut);margin-top:0">아래 프롬프트를 복사해 Claude에 붙여넣으면 입력한 내용과 작성한 답변을 바탕으로 더 세밀한 질문·피드백을 받을 수 있어요.</p>
+  <div class="actions"><button class="btn primary" data-copy="1">프롬프트 복사</button></div><pre class="pr" id="promptBox">${esc(buildPrompt(a))}</pre>`}`;
+}
+function buildPrompt(a){
+  const L=FIELDS.map(f=>`- ${f.n}: ${(a[f.id]||'').trim()||'(비어 있음)'}`).join('\n');
+  const ans=Object.entries(a.answers).filter(([,v])=>(v.t||'').trim()).map(([k,v])=>`[${k}] ${v.t.trim()}`).join('\n');
+  return `너는 미술대학 디자인계열 심층면접 면접관이다. 아래는 고3 학생의 활동 서류 내용이다. 학생이 스스로 공부해야 할 부분을 중심으로 분석해 줘.\n\n활동명: ${a.title||'(미입력)'}\n유형: ${a.type}\n키워드: ${a.keywords||'(미입력)'}\n${L}\n\n${ans?`학생이 써 본 답변:\n${ans}\n\n`:''}요청:\n1) 서류의 약점(모호한 표현, 근거 없는 주장, 시행착오·성찰이 얕은 곳)을 짚어 줘.\n2) 핵심 질문 8개 — 그중 ‘시행착오’ 4개, ‘스스로 성찰하고 발견한 부분 심화’ 4개. 각 질문마다 면접관 의도를 한 줄로.\n3) 가장 위험한 질문 1개를 골라 꼬리질문 5단계.\n4) 학생이 스스로 공부해야 할 것을 우선순위로 정리.\n5) 학생 답변이 있다면 구체성·이유·수정·전공 연결 기준으로 짧게 피드백.\n※ 학생이 실제로 하지 않은 경험을 지어내라고 조언하지 말 것.`;
+}
+function renderMain(){
+  const a=cur(),m=$('#main');
+  if(!a){m.innerHTML='<div class="empty-state">왼쪽에서 “+ 활동 추가”를 눌러 시작하세요.</div>';return}
+  renderTabs();
+  m.innerHTML=S.tab==='input'?renderInput(a):S.tab==='diag'?renderDiag(a):S.tab==='study'?renderStudy(a):S.tab==='printall'?S.acts.map(x=>`<div class="pa"><h1 style="font-size:20px;margin:0 0 8px">${esc(x.title||'(제목 없음)')} <small style="font-weight:400;font-size:13px;color:var(--mut)">${esc(x.type)}</small></h1>${renderDiag(x)}${renderStudy(x,true)}</div>`).join(''):renderDiag(a)+renderStudy(a);
+}
+function renderAll(){renderSide();renderMain()}
+
+/* ============ 이벤트 ============ */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-sel],[data-del],[data-tab],[data-go],[data-copy]');if(!t)return;
+  const d=t.dataset;
+  if(d.sel!==undefined){S.cur=+d.sel;S.tab='input';renderAll()}
+  else if(d.del!==undefined){const i=+d.del;if(!confirm('이 활동을 삭제할까요?'))return;S.acts.splice(i,1);S.cur=Math.max(0,Math.min(S.cur,S.acts.length-1));renderAll()}
+  else if(d.tab){
+    if(d.tab==='print'){const prev=S.tab;S.tab='print';renderMain();setTimeout(()=>{window.print();S.tab=prev;renderMain()},50)}
+    else{S.tab=d.tab;renderMain();window.scrollTo({top:0})}
+  }
+  else if(d.go){S.tab=d.go;renderMain();window.scrollTo({top:0})}
+  else if(d.copy){const txt=$('#promptBox').textContent;copyText(txt)}
+});
+function copyText(txt){
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('복사했어요')}catch(_){toast('복사 실패 — 직접 선택해 복사하세요')}ta.remove()};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(()=>toast('복사했어요'),fb);else fb();
+}
+document.addEventListener('input',e=>{
+  const a=cur();if(!a)return;const el=e.target;
+  if(el.dataset.f){a[el.dataset.f]=el.value;const c=document.querySelector(`[data-c="${el.dataset.f}"]`);if(c)c.textContent=el.value.length+'자';if(el.dataset.f==='title')renderSide()}
+  else if(el.dataset.ans){const k=el.dataset.ans;(a.answers[k]=a.answers[k]||{t:'',c:[false,false,false,false]}).t=el.value;const c=document.querySelector(`[data-ac="${k}"]`);if(c)c.textContent=el.value.length+'자'}
+});
+document.addEventListener('change',e=>{
+  const a=cur();if(!a)return;const el=e.target;
+  if(el.dataset.f==='type')a.type=el.value;
+  else if(el.dataset.achk){const [k,i]=el.dataset.achk.split(':');(a.answers[k]=a.answers[k]||{t:'',c:[false,false,false,false]}).c[+i]=el.checked}
+  else if(el.dataset.task){a.done[el.dataset.task]=el.checked;const lab=el.closest('.task');lab.classList.toggle('done',el.checked);
+    const T=buildTasks(a),dn=T.filter(t=>isDone(a,t)).length;$('#taskProg').textContent=`${dn} / ${T.length} 완료`;document.querySelector('.meter i').style.width=Math.round(dn/T.length*100)+'%'}
+});
+$('#btnAdd').onclick=()=>{S.acts.push(newAct());S.cur=S.acts.length-1;S.tab='input';renderAll()};
+$('#btnSample').onclick=()=>{
+  const a=newAct();Object.assign(a,{title:'(예시) 학교공간 리디자인 — 노후 복도 코너',type:TYPES[0],keywords:'동선, 여백, 색채 대비',
+    motive:'복도 끝 자투리 공간이 항상 비어 있는 것이 이상해서, 왜 학생들이 그곳에 머물지 않는지 알고 싶었다. 다양한 공간을 보며 관심을 가지게 되었다.',
+    process:'3일간 하교 시간대에 학생 동선을 관찰하고, 스케치 6장으로 배치안을 만든 뒤 포토샵으로 합성해 시안 3개를 만들었다.',
+    trial:'열심히 작업하여 좋은 결과를 얻었다. 별 어려움은 없었다.',
+    fix:'',
+    result:'최종 시안 1점을 완성했고 발표에서 좋은 반응을 얻었다.',
+    reflect:'이 활동을 통해 많이 배우고 성장하였다. 공간 디자인의 의미 있는 경험이 되었다.',
+    link:'앞으로 다양한 작업에 도움이 될 것 같다.'});
+  const c0=cur();if(c0&&!FIELDS.some(f=>(c0[f.id]||'').trim())&&!c0.title.trim()&&!c0.keywords.trim())S.acts.splice(S.cur,1);
+  S.acts.push(a);S.cur=S.acts.length-1;S.tab='diag';renderAll();toast('약점이 많은 예시를 불러왔어요 — 진단을 확인해 보세요');
+};
+$('#btnSave').onclick=()=>{
+  const blob=new Blob([JSON.stringify(S.acts,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download='interview-analyzer.json';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),500);toast('JSON으로 저장했어요');
+};
+$('#btnLoad').onclick=()=>$('#fileLoad').click();
+$('#fileLoad').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const arr=JSON.parse(r.result);if(!Array.isArray(arr))throw 0;S.acts=arr.map(x=>Object.assign(newAct(),x));S.cur=0;S.tab='input';renderAll();toast('불러왔어요')}catch(_){toast('올바른 JSON 파일이 아니에요')}};
+  r.readAsText(f);e.target.value='';
+};
+
+
+/* ============ 일괄 저장 ============ */
+const GRP=a=>a.type==='교과 세특'?'교과':a.type.indexOf('비교과')>=0?'비교과':'기타';
+const safe=t=>String(t||'제목없음').replace(/[\\/:*?"<>|\r\n]+/g,'_').replace(/\s+/g,' ').trim().slice(0,60);
+function actToMd(a){
+  const d=diagAll(a),G=buildQuestions(a),T=buildTasks(a),ST2={ok:'양호',weak:'보강 필요',empty:'빈칸'};
+  let s=`# ${a.title||'(제목 없음)'}\n\n- 유형: ${a.type}\n- 키워드: ${a.keywords||'(미입력)'}\n\n## 입력 내용\n\n`;
+  s+=FIELDS.map(f=>`### ${f.n}\n${(a[f.id]||'').trim()||'(비어 있음)'}\n`).join('\n');
+  s+=`\n## 서류 진단\n\n`+d.map(x=>`- **${x.f.n}** — ${ST2[x.st]}: ${x.notes.join(' ')}`).join('\n')+'\n';
+  G.forEach(g=>{
+    s+=`\n## ${g.title}\n\n`;
+    g.items.forEach(q=>{const an=a.answers[q.k]||{t:'',c:[]};
+      s+=`- Q. ${q.q}${q.gap?'  (서류 빈칸/약점)':''}\n  - 면접관 의도: ${q.why}\n`;
+      if((an.t||'').trim())s+=`  - 내 답변: ${an.t.trim().replace(/\n/g,' ')}\n  - 자가점검: ${CHECKS.map((c,i)=>(an.c[i]?'[x] ':'[ ] ')+c).join(' / ')}\n`;
+    });
+  });
+  s+=`\n## 꼬리질문 사슬\n\n`+buildChain(a).map(x=>'- '+x).join('\n')+'\n';
+  s+=`\n## 스스로 공부할 부분\n\n`+T.map(t=>`- [${isDone(a,t)?'x':' '}] (${['','우선','중요','보완'][t.pri]}) ${t.title}\n  - ${t.detail}`).join('\n')+'\n';
+  return s;
+}
+const CRCT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRCT[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0}
+function makeZip(files){
+  const enc=new TextEncoder(),now=new Date();
+  const tm=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1),dt=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+  const u16=v=>[v&255,(v>>8)&255],u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255];
+  const parts=[],cen=[];let off=0;
+  files.forEach(f=>{
+    const nm=enc.encode(f.name),data=enc.encode(f.text),crc=crc32(data),sz=data.length;
+    const lh=new Uint8Array([0x50,0x4b,3,4,...u16(20),...u16(0x0800),...u16(0),...u16(tm),...u16(dt),...u32(crc),...u32(sz),...u32(sz),...u16(nm.length),...u16(0)]);
+    parts.push(lh,nm,data);cen.push({nm,crc,sz,off});off+=lh.length+nm.length+sz;
+  });
+  const cs=off;
+  cen.forEach(c=>{
+    const h=new Uint8Array([0x50,0x4b,1,2,...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(tm),...u16(dt),...u32(c.crc),...u32(c.sz),...u32(c.sz),...u16(c.nm.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(c.off)]);
+    parts.push(h,c.nm);off+=h.length+c.nm.length;
+  });
+  parts.push(new Uint8Array([0x50,0x4b,5,6,...u16(0),...u16(0),...u16(cen.length),...u16(cen.length),...u32(off-cs),...u32(cs),...u16(0)]));
+  return new Blob(parts,{type:'application/zip'});
+}
+function download(blob,name){const u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),800)}
+$('#btnZip').onclick=()=>{
+  const acts=S.acts.filter(a=>a.title.trim()||FIELDS.some(f=>(a[f.id]||'').trim()));
+  if(!acts.length){toast('저장할 활동이 없어요');return}
+  const order={'교과':0,'비교과':1,'기타':2},sorted=acts.map((a,i)=>({a,i})).sort((x,y)=>order[GRP(x.a)]-order[GRP(y.a)]||x.i-y.i).map(x=>x.a);
+  const ST2={ok:'양호',weak:'보강',empty:'빈칸'};
+  let sum=`# 면접플러스 전체 요약\n\n| 구분 | 활동 | ${FIELDS.map(f=>f.n.replace(/^[①-⑦]\s*/,'')).join(' | ')} |\n|---|---|${FIELDS.map(()=>'---').join('|')}|\n`;
+  const files=[];let n={};
+  sorted.forEach(a=>{
+    const g=GRP(a);n[g]=(n[g]||0)+1;
+    files.push({name:`${g}/${String(n[g]).padStart(2,'0')}_${safe(a.title)}.md`,text:actToMd(a)});
+    sum+=`| ${g} | ${a.title||'(제목 없음)'} | ${diagAll(a).map(x=>ST2[x.st]).join(' | ')} |\n`;
+  });
+  files.unshift({name:'00_전체요약.md',text:sum});
+  download(makeZip(files),'interview-analyzer-all.zip');
+  toast(`활동 ${sorted.length}개를 ZIP으로 저장했어요`);
+};
+$('#btnPrintAll').onclick=()=>{
+  if(!S.acts.length)return;const prev=S.tab;S.tab='printall';renderMain();
+  setTimeout(()=>{window.print();S.tab=prev;renderMain()},80);
+};
+
+/* 시작 */
+S.acts.push(newAct());renderAll();
+</script>
+</body>
+</html>
